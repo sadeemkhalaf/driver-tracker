@@ -99,7 +99,6 @@ export const DriverTracker = () => {
                     flat
                     image={require('../../assets/truck.png')} />
             </MapView>}
-
         </View>
     )
 }

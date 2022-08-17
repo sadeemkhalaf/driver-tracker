@@ -61,7 +61,7 @@ export class AxiosApi {
   ): Promise<ResponseType | null> {
     try {
       const header = this.getAuthBearerHeader();
-      const response = await this.apiInstance?.post(endpoint, null, {
+      const response = await this.apiInstance?.post(endpoint, data ?? null, {
         headers: header,
       });
       if (!response?.status) {
