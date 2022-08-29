@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { DriverTracker } from './src/DriverTracker/DriverTracker';
-import { addDataToDb } from './src/utils/db/sqliteConfig';
+import { addDataToDb, dropDriverLogTable } from './src/utils/db/sqliteConfig';
 
 export default function App() {
 

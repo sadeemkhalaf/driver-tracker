@@ -15,22 +15,37 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["location", "fetch"]
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ],
+        "NSLocationWhenInUseUsageDescription":"Disc Golf Video games makes use of location to find out distances, which is used for a number of video games",
+        "NSLocationAlwaysUsageDescription":"Disc Golf Video games makes use of location to find out distances, which is used for a number of video games",
+        "NSLocationUsageDescription":"Disc Golf Video games makes use of location to find out distances, which is used for a number of video games",
+        "LSApplicationQueriesSchemes": ["comgooglemaps", "apple-maps"]
       },
       "entitlements": {
         "com.apple.developer.networking.wifi-info": true
-      }
+      },
+      "bundleIdentifier": "com.sadeeemk.driver-tracker"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": ["ACCESS_BACKGROUND_LOCATION"]
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "FOREGROUND_SERVICE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

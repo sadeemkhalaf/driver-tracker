@@ -14,7 +14,7 @@ export class AxiosApi {
 
   setup() {
     this.apiInstance = axios.create({
-      baseURL: "",
+      baseURL: "http://localhost:8080",
       timeout: 0,
       headers: {
         Accept: "application/json",
@@ -37,8 +37,7 @@ export class AxiosApi {
 
   public async getRequest(
     endpoint: string,
-    params?: any,
-    showAlert: boolean = true
+    params?: any
   ): Promise<ResponseType | null> {
     try {
       const header = this.getAuthBearerHeader();
@@ -55,21 +54,40 @@ export class AxiosApi {
     return null;
   }
 
-  public async postRequest(
-    endpoint: string,
-    data?: any
-  ): Promise<ResponseType | null> {
+  public async postRequest(endpoint: string, data?: any): Promise<any | null> {
     try {
       const header = this.getAuthBearerHeader();
       const response = await this.apiInstance?.post(endpoint, data ?? null, {
         headers: header,
       });
+      console.log("endpoint, response: ", response?.status, "postRequest");
+
       if (!response?.status) {
         throw response?.statusText;
       } else {
-        return response.data;
+        return { statusText: response.statusText, status: response.status };
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log("response error", error);
+    }
+    return null;
+  }
+
+  public async putRequest(endpoint: string, data?: any): Promise<any | null> {
+    try {
+      const response = await this.apiInstance?.put(endpoint, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response?.status) {
+        throw response?.statusText;
+      } else {
+        return { statusText: response.statusText, status: response.status };
+      }
+    } catch (error) {
+      console.log("response error", error);
+    }
     return null;
   }
 }
