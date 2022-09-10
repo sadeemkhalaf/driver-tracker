@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
+// import { DriverTracker } from './src/DriverTracker/DriverTracker';
+import { addDataToDb } from './src/utils/db/sqliteConfig';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { DriverTracker } from './src/DriverTracker/DriverTracker';
-import { addDataToDb, dropDriverLogTable } from './src/utils/db/sqliteConfig';
 
 export default function App() {
 
@@ -21,11 +24,13 @@ export default function App() {
       unsubscribe();
     }
   }, [])
-
+  const Switch = createStackNavigator();
   return (
-    <View style={styles.container}>
-      <DriverTracker />
-    </View>
+    <NavigationContainer fallback={<Text>Loading…</Text>}>
+      <Switch.Navigator >
+        <Switch.Screen name="main" component={DriverTracker} />
+      </Switch.Navigator>
+    </NavigationContainer>
   );
 }
 

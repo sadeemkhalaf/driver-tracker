@@ -68,7 +68,7 @@ export class AxiosApi {
         return { statusText: response.statusText, status: response.status };
       }
     } catch (error) {
-      console.log("response error", error);
+      console.log("response error", error, 'data: ', data);
     }
     return null;
   }
