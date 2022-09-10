@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { Text } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
-// import { DriverTracker } from './src/DriverTracker/DriverTracker';
 import { addDataToDb } from './src/utils/db/sqliteConfig';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -33,12 +32,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
