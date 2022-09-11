@@ -26,7 +26,7 @@ export default function App() {
   const Switch = createStackNavigator();
   return (
     <NavigationContainer fallback={<Text>Loading…</Text>}>
-      <Switch.Navigator >
+      <Switch.Navigator screenOptions={{headerShown: false}} >
         <Switch.Screen name="main" component={DriverTracker} />
       </Switch.Navigator>
     </NavigationContainer>

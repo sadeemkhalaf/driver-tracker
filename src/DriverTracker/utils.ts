@@ -41,8 +41,8 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
         if (data) {
             const { locations }: any = data;
             // console.log('updated location in ', new Date().toLocaleTimeString(), locations)
-
             saveCurrentLocation(locations)
+            
         } else {
             saveCurrentLocation([{ latitude: 31.945368, longitude: 35.928371 }])
         }
@@ -53,19 +53,18 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
 
 export const requestPermissions = async () => {
     try {
-        await Location.requestBackgroundPermissionsAsync();
+        const response = await Location.requestBackgroundPermissionsAsync();
+        console.log('response: ', response);
+        
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
             showsBackgroundLocationIndicator: true,
             accuracy: Location.Accuracy.BestForNavigation,
-            timeInterval: 15000,
             foregroundService: {
                 notificationTitle: LOCATION_TASK_NAME,
                 notificationBody: 'Background location is running...',
                 notificationColor: 'blue',
             },
             mayShowUserSettingsDialog: true,
-            pausesUpdatesAutomatically: false,
-            deferredUpdatesInterval: 15000,
             activityType: Location.LocationActivityType.AutomotiveNavigation,
         });
     } catch (error) {

@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { Button, View } from 'react-native'
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
+// import Device from 'expo-device';
 import NetInfo from '@react-native-community/netinfo';
 import { getAll, insertLog } from '../utils/db/sqliteConfig';
 import { ApiService } from '../utils/api/axio-setup';
@@ -17,12 +18,25 @@ export const DriverTracker = () => {
     const [currentLocation, setCurrentLocation] = useState<any>(null);
     const [initialLocation, setInitialLocation] = useState<any>(null);
 
+    const requestPermissions = async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+          await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+            accuracy: Location.Accuracy.Balanced,
+          });
+        } else {
+            console.log('not granted ');
+        }
+      };
+
     const getInitialCurrentLocation = async () => {
+        // TODO: crashes on Android
+        // catched getInitialCurrentLocation error:  [Error: Not authorized to use location services.]
         try {
             const current = await Location.getCurrentPositionAsync();
             setInitialLocation({
-                latitude: current?.coords.latitude,
-                longitude: current?.coords.longitude
+                latitude: current?.coords?.latitude,
+                longitude: current?.coords?.longitude
             })
         } catch (error) {
             console.log('catched getInitialCurrentLocation error: ', error);
@@ -32,8 +46,7 @@ export const DriverTracker = () => {
     const handleOnline = async () => {
         try {
             const current = await getSavedCurrentLocation()
-            console.log('current: ', current);
-            
+            console.log('current location: ', current);
             setCurrentLocation(current)
             if ((!isConnected || !isInternetReachable)) {
                 insertLog(String(Date.now()), String(current?.longitude), String(current?.latitude));
@@ -41,7 +54,7 @@ export const DriverTracker = () => {
                 console.log('saved to offline storage sqlite');
             } else {
                 console.log('hasOfflineLogs: ', hasOfflineLogs);
-                
+
                 if (hasOfflineLogs) {
                     // handle
                     getAll();
@@ -100,16 +113,20 @@ export const DriverTracker = () => {
 
     return (
         <Fragment>
+
             <View>
-                {!!currentLocation && <MapView
+                {(!!currentLocation && !!initialLocation) && <MapView
                     style={styles.map}
                     followsUserLocation
+                    showsUserLocation={true}
+                    liteMode
                     initialRegion={{ ...initialLocation, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }}
                     userLocationPriority={'balanced'}
                     userLocationUpdateInterval={1000}
                     onMapReady={() => console.log('started')}
                     region={{ ...currentLocation, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }}
                     focusable
+                    provider={PROVIDER_GOOGLE}
                 >
                     <Marker
                         coordinate={currentLocation}
@@ -117,15 +134,16 @@ export const DriverTracker = () => {
                         flat
                         image={require('../../assets/truck.png')} />
                 </MapView>}
-
             </View>
 
-            <View style={[{ paddingHorizontal: 36, paddingVertical: 12, backgroundColor: '#2214a9', position: 'absolute', bottom: 96, left: 0, right: 0, width: '100%' }]}>
-                <Button color={'white'} title='Start Tracking' onPress={handleStartTracking} disabled={started} />
+            <View style={[{ paddingHorizontal: 36, paddingVertical: 12, backgroundColor: 'transparent', position: 'absolute', bottom: 96, left: 0, right: 0, width: '100%' }]}>
+                <Button color={'blue'} title='Start Tracking' onPress={handleStartTracking} disabled={started} />
             </View>
-            <View style={[{ paddingHorizontal: 36, paddingVertical: 12, backgroundColor: '#873600', position: 'absolute', bottom: 32, left: 0, right: 0, width: '100%' }]}>
-                <Button color={'white'} title='Stop Tracking' onPress={stopTracking} disabled={!started} />
+
+            <View style={[{ paddingHorizontal: 36, paddingVertical: 12, backgroundColor: 'transparent', position: 'absolute', bottom: 32, left: 0, right: 0, width: '100%' }]}>
+                <Button color={'red'} title='Stop Tracking' onPress={stopTracking} disabled={!started} />
             </View>
+
         </Fragment>
     )
 }
