@@ -1,8 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Button, View } from 'react-native'
+import { Button, Platform, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
-// import Device from 'expo-device';
 import NetInfo from '@react-native-community/netinfo';
 import { getAll, insertLog } from '../utils/db/sqliteConfig';
 import { ApiService } from '../utils/api/axio-setup';
@@ -17,17 +16,6 @@ export const DriverTracker = () => {
 
     const [currentLocation, setCurrentLocation] = useState<any>(null);
     const [initialLocation, setInitialLocation] = useState<any>(null);
-
-    const requestPermissions = async () => {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status === 'granted') {
-          await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-            accuracy: Location.Accuracy.Balanced,
-          });
-        } else {
-            console.log('not granted ');
-        }
-      };
 
     const getInitialCurrentLocation = async () => {
         // TODO: crashes on Android
@@ -111,10 +99,28 @@ export const DriverTracker = () => {
     }, [started])
 
 
+    const onPress = async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === "granted") {
+            console.log('granted');
+
+            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                accuracy: Location.Accuracy.BestForNavigation,
+                timeInterval: 3000,
+                foregroundService: {
+                    notificationTitle: "BackgroundLocation Is On",
+                    notificationBody: "We are tracking your location",
+                    notificationColor: "#ffce52",
+                },
+            });
+        }
+    };
+
+
     return (
         <Fragment>
 
-            <View>
+            {Platform.OS === 'ios' && <View>
                 {(!!currentLocation && !!initialLocation) && <MapView
                     style={styles.map}
                     followsUserLocation
@@ -134,7 +140,7 @@ export const DriverTracker = () => {
                         flat
                         image={require('../../assets/truck.png')} />
                 </MapView>}
-            </View>
+            </View>}
 
             <View style={[{ paddingHorizontal: 36, paddingVertical: 12, backgroundColor: 'transparent', position: 'absolute', bottom: 96, left: 0, right: 0, width: '100%' }]}>
                 <Button color={'blue'} title='Start Tracking' onPress={handleStartTracking} disabled={started} />

@@ -53,20 +53,29 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
 
 export const requestPermissions = async () => {
     try {
-        const response = await Location.requestBackgroundPermissionsAsync();
-        console.log('response: ', response);
+        const { status } = await Location.requestBackgroundPermissionsAsync();
+        if (status === "granted") {
+            console.log('granted');
+            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                showsBackgroundLocationIndicator: true,
+                accuracy: Location.Accuracy.BestForNavigation,
+                foregroundService: {
+                    notificationTitle: LOCATION_TASK_NAME,
+                    notificationBody: 'Background location is running...',
+                    notificationColor: 'blue',
+                },
+                mayShowUserSettingsDialog: true,
+                activityType: Location.LocationActivityType.AutomotiveNavigation,
+            });
+       
+        } else {
+            console.log('not granted');
+            
+        }
+        // const response = await Location.requestBackgroundPermissionsAsync();
+        // console.log('response: ', response);
         
-        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-            showsBackgroundLocationIndicator: true,
-            accuracy: Location.Accuracy.BestForNavigation,
-            foregroundService: {
-                notificationTitle: LOCATION_TASK_NAME,
-                notificationBody: 'Background location is running...',
-                notificationColor: 'blue',
-            },
-            mayShowUserSettingsDialog: true,
-            activityType: Location.LocationActivityType.AutomotiveNavigation,
-        });
+
     } catch (error) {
         console.log('catched error require permissions: ', error);
     }

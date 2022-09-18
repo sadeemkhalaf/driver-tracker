@@ -14,7 +14,7 @@ export class AxiosApi {
 
   setup() {
     this.apiInstance = axios.create({
-      baseURL: "http://localhost:8080",
+      baseURL: this.config?.url,
       timeout: 0,
       headers: {
         Accept: "application/json",

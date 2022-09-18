@@ -42,6 +42,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAdgCdPHeqwkqAovrsa7BSF1_cqC3YtgJI"
+        }
+      },
       "permissions": [
         "ACCESS_BACKGROUND_LOCATION",
         "ACCESS_COARSE_LOCATION",
@@ -52,6 +57,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e3ba9bbe-e4bf-417f-ab00-83b141aa24d2"
+      }
     }
   }
 }
