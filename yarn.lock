@@ -3238,6 +3238,14 @@ expo-asset@~8.6.1:
     path-browserify "^1.0.0"
     url-parse "^1.5.9"
 
+expo-background-fetch@~10.3.0:
+  version "10.3.0"
+  resolved "https://registry.yarnpkg.com/expo-background-fetch/-/expo-background-fetch-10.3.0.tgz#c510cfbf0aea5a1c042f4ccdeb6721b2b60f3c70"
+  integrity sha512-Rqe1VMTNK1ZBWLYt2rurui2XP8FWwktvnSmswfWqJbhzfV7htAXJFeGbDIOXZ/HkN3boPztlctOsypcZla68bg==
+  dependencies:
+    "@expo/config-plugins" "~5.0.0"
+    expo-task-manager "~10.3.0"
+
 expo-constants@~13.2.2, expo-constants@~13.2.4:
   version "13.2.4"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-13.2.4.tgz#eab4a553f074b2c60ad7a158d3b82e3484a94606"

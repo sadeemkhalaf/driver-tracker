@@ -41,7 +41,6 @@ export const addDataToDb = () => {
       console.log("failed to create table ", DRIVER_TABLE_NAME, error);
     }
   );
-
   //
   console.log("db created");
 };
@@ -63,7 +62,7 @@ const testPostSavedData = async (_array: any[], length: number) => {
       console.log("add all, response.status", response.status);
       dropDriverLogTable();
     } else {
-      console.error("something went wrong");
+      console.log("something went wrong");
     }
   }
 };
