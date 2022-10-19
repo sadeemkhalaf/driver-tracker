@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import * as BackgroundFetch from "expo-background-fetch";
 import { ApiService } from "../utils/api/axio-setup";
-import { insertLog } from "../utils/db/sqliteConfig";
+import { getAll, insertLog } from "../utils/db/sqliteConfig";
 
 export const LOCATION_TASK_NAME = "location-tracking";
 export const BG_LOCATION_TASK_NAME = "background_location-tracking";
@@ -16,18 +16,20 @@ export const handleOnlineService = async () => {
   try {
     const current = await getSavedCurrentLocation();
     {
+      // @method getAll: gets all offline data and post to server
+      await getAll();
       const response = await ApiService.postRequest("/oneLocation", {
         lng: current?.longitude,
         lat: current?.latitude,
       });
 
-      if (Number(response.status) !== 200) {
+      // handle offline
+      if (Number(response.status) !== 200 || Number(response.status) !== 201) {
         insertLog(
           String(Date.now()),
           String(current?.longitude),
           String(current?.latitude)
         );
-        console.log("response: ", response);
       }
     }
   } catch (error) {
@@ -83,9 +85,6 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     console.log("catched error: ", error);
   }
 
-
-  const now = Date.now();
-  console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`);
   return BackgroundFetch.BackgroundFetchResult.NewData;
 });
 
@@ -98,6 +97,7 @@ export const requestPermissions = async () => {
 
     await Location.requestForegroundPermissionsAsync();
     if (granted && grantedBackground) {
+      // *** registerBackgroundFetchAsync *** it was the missing line
       await registerBackgroundFetchAsync();
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         showsBackgroundLocationIndicator: true,
@@ -114,8 +114,6 @@ export const requestPermissions = async () => {
       console.log("not granted");
       await Location.requestBackgroundPermissionsAsync();
     }
-    // const response = await Location.requestBackgroundPermissionsAsync();
-    // console.log('response: ', response);
   } catch (error) {
     console.log("catched error require permissions: ", error);
   }

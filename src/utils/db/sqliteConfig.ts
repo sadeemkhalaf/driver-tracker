@@ -45,7 +45,7 @@ export const addDataToDb = () => {
   console.log("db created");
 };
 
-const testPostSavedData = async (_array: any[], length: number) => {
+const postSavedData = async (_array: any[], length: number) => {
   console.log("results: ", _array);
   if (length > 1) {
     console.log("has more than 1 record");
@@ -58,7 +58,7 @@ const testPostSavedData = async (_array: any[], length: number) => {
     const response = await ApiService.putRequest("/listofLocations", {
       listoflocations: [...mappedArray],
     });
-    if (response.status === 201) {
+    if (response.status === 201 || response.status === 200) {
       console.log("add all, response.status", response.status);
       dropDriverLogTable();
     } else {
@@ -67,15 +67,15 @@ const testPostSavedData = async (_array: any[], length: number) => {
   }
 };
 
-export const getAll = (setValues?: any) => {
-  db.transaction((tx) => {
+export const getAll = async (setValues?: any) => {
+   db.transaction((tx) => {
     tx.executeSql(
       `select * from ${DRIVER_TABLE_NAME}`,
       [],
-      (_, { rows }) => {
+      async (_, { rows }) => {
         console.log("results from ", DRIVER_TABLE_NAME, rows._array);
         setValues && setValues(rows._array);
-        testPostSavedData(rows._array, rows.length);
+        const response = await postSavedData(rows._array, rows.length);
       },
       (error) => {
         console.log("error to getall");
