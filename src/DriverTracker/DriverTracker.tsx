@@ -11,7 +11,7 @@ import MapViewComponent from './MapViewComponent';
 export const DriverTracker = () => {
     const { isConnected, isInternetReachable } = NetInfo.useNetInfo();
     const [hasOfflineLogs, setHasOfflineLogs] = useState<boolean>(false);
-    const [started, setStarted] = useState(TaskManager.isTaskDefined(LOCATION_TASK_NAME));
+    const [started, setStarted] = useState(false);
 
     const [currentLocation, setCurrentLocation] = useState<any>(null);
     const [initialLocation, setInitialLocation] = useState<any>(null);
@@ -78,6 +78,8 @@ export const DriverTracker = () => {
 
     useEffect(() => {
         getInitialCurrentLocation();
+        const isTaskDefined = TaskManager.isTaskDefined(LOCATION_TASK_NAME);
+        setStarted(isTaskDefined);
     }, [])
 
 
@@ -103,7 +105,7 @@ export const DriverTracker = () => {
 
     return (
         <Fragment>
-            <MapViewComponent initialLocation={initialLocation} currentLocation={currentLocation} />
+            {/* <MapViewComponent initialLocation={initialLocation} currentLocation={currentLocation} /> */}
 
             <View style={[{ paddingHorizontal: 36, paddingVertical: 12, backgroundColor: 'transparent', position: 'absolute', bottom: 96, left: 0, right: 0, width: '100%' }]}>
                 <Button color={'blue'} title='Start Tracking' onPress={handleStartTracking} disabled={started} />
