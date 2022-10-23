@@ -20,7 +20,7 @@ const MapViewComponent: FC<MapComponentProps> = ({ initialLocation, currentLocat
                     liteMode
                     initialRegion={{ ...initialLocation, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }}
                     userLocationPriority={'balanced'}
-                    userLocationUpdateInterval={1000}
+                    userLocationUpdateInterval={15000 * 4}
                     onMapReady={() => console.log('started')}
                     region={{ ...currentLocation, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }}
                     focusable

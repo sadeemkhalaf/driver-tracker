@@ -94,7 +94,7 @@ export const insertLog = (createdAt: string, lang: string, lat: string) => {
       );
     },
     (error) => {
-      console.log("failed to insert, ", error);
+      console.log("failed to insert, ", error, lat, lang, createdAt);
     }
   );
 };

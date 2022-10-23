@@ -8,7 +8,7 @@ import { getAll, insertLog } from "../utils/db/sqliteConfig";
 export const LOCATION_TASK_NAME = "location-tracking";
 export const BG_LOCATION_TASK_NAME = "background_location-tracking";
 export const STORAGE_CURRENT_LOCATION_KEY = "expo-current-location";
-export const INTERVAL = 15000 * 4;
+export const INTERVAL = 60000;
 export const LATITUDE_DELTA = 0.004;
 export const LONGITUDE_DELTA = 0.004;
 
@@ -23,6 +23,7 @@ export const handleOnlineService = async () => {
         lat: current?.latitude,
       });
 
+      console.log('handleOnlineService interval ran on ', new Date().toLocaleTimeString());
       // handle offline
       if (Number(response.status) !== 200 || Number(response.status) !== 201) {
         insertLog(
@@ -62,7 +63,7 @@ export async function saveCurrentLocation(locations: any[]) {
 
 export async function registerBackgroundFetchAsync() {
   return BackgroundFetch.registerTaskAsync(LOCATION_TASK_NAME, {
-    minimumInterval: 5, // task will fire 5 seconds after app is backgrounded
+    minimumInterval: 60, // task will fire 5 seconds after app is backgrounded
     stopOnTerminate: false,
   });
 }
@@ -78,6 +79,9 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
       const { locations }: any = data;
       // console.log('updated location in ', new Date().toLocaleTimeString(), locations)
       saveCurrentLocation(locations);
+      console.log('handleOnlineService');
+      handleOnlineService();
+      
     } else {
       saveCurrentLocation([{ latitude: 31.945368, longitude: 35.928371 }]);
     }
@@ -104,9 +108,11 @@ export const requestPermissions = async () => {
         accuracy: Location.Accuracy.BestForNavigation,
         foregroundService: {
           notificationTitle: LOCATION_TASK_NAME,
-          notificationBody: "foregroundService location is running...",
-          notificationColor: "blue",
+          notificationBody: "Background location is running...",
+          notificationColor: "yellow",
         },
+        deferredUpdatesInterval: INTERVAL,
+        timeInterval: INTERVAL,
         mayShowUserSettingsDialog: true,
         activityType: Location.LocationActivityType.AutomotiveNavigation,
       });
