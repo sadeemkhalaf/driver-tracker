@@ -8,7 +8,7 @@ import { getAll, insertLog } from "../utils/db/sqliteConfig";
 export const LOCATION_TASK_NAME = "location-tracking";
 export const BG_LOCATION_TASK_NAME = "background_location-tracking";
 export const STORAGE_CURRENT_LOCATION_KEY = "expo-current-location";
-export const INTERVAL = 60000;
+export const INTERVAL = 40000;
 export const LATITUDE_DELTA = 0.004;
 export const LONGITUDE_DELTA = 0.004;
 
